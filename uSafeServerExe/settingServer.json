@@ -1,5 +1,0 @@
-{
-	"Port": 38443,
-	"CertFilePath": "./server.pfx",
-	"CertFilePassword": "123123"
-}
