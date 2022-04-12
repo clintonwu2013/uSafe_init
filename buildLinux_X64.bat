@@ -1,5 +1,4 @@
 mkdir uSafeServerExe
-copy .\server.pfx .\uSafeServerExe
 copy .\.env .\uSafeServerExe
 
 
