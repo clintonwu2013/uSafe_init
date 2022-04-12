@@ -1,5 +1,6 @@
 mkdir uSafeServerExe
 copy .\.env .\uSafeServerExe
+copy .\server.pfx .\uSafeServerExe
 
 
 SET CGO_ENABLED=0
