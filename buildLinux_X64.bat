@@ -1,5 +1,5 @@
 mkdir uSafeServerExe
-copy .\.env .\uSafeServerExe
+copy .\settingServer.json .\uSafeServerExe
 copy .\server.pfx .\uSafeServerExe
 
 

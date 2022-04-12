@@ -3,26 +3,34 @@ package main
 import (
 	api "changingtec/usafe/IDEAPIFunction"
 	idecrypt "changingtec/usafe/IDECrypt"
+	models "changingtec/usafe/Models"
 	IDET "changingtec/usafe/Utility"
 	"crypto/tls"
+	"encoding/json"
 	"encoding/pem"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
 
-var (
-	PORT             = os.Getenv("PORT")
-	CertFilePath     = os.Getenv("CERT_FILE_PATH")
-	CertFilePassword = os.Getenv("CERT_FILE_PASSWORD")
-	LogDebug         *log.Logger
-)
+const settingServerFile = "./settingServer.json"
 
 func main() {
+
+	settingServer, err := getServerSetting()
+	if err != nil {
+		IDET.DebuggerPrintf("getServerSetting() error, err=" + err.Error())
+		panic(err.Error())
+	}
+
+	PORT := strconv.Itoa(settingServer.Port)
+	CertFilePath := settingServer.CertFilePath
+	CertFilePassword := settingServer.CertFilePassword
 
 	engine := gin.New()
 
@@ -43,7 +51,7 @@ func main() {
 		}
 	}
 
-	tlsCert, err := getTLSCert()
+	tlsCert, err := getTLSCert(CertFilePath, CertFilePassword)
 	if err != nil {
 		IDET.DebuggerPrintf("getTLSCert() error, err=" + err.Error())
 		panic(err.Error())
@@ -64,7 +72,7 @@ func main() {
 
 }
 
-func getTLSCert() (tlsCert tls.Certificate, err error) {
+func getTLSCert(CertFilePath, CertFilePassword string) (tlsCert tls.Certificate, err error) {
 	cert, privk, err := idecrypt.LoadPKCS12FromFile(CertFilePath, CertFilePassword)
 	if err != nil {
 		IDET.DebuggerPrintf("idecrypt.LoadPKCS12FromFile error, err=" + err.Error())
@@ -84,5 +92,18 @@ func getTLSCert() (tlsCert tls.Certificate, err error) {
 		&pem.Block{Type: "PRIVATE KEY", Bytes: bytes},
 	)
 	tlsCert, err = tls.X509KeyPair(certPEMByte, keyPEMByte)
+	return
+}
+
+func getServerSetting() (settingServer models.SettingServer, err error) {
+	fileName := settingServerFile
+	jsonByte, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(jsonByte, &settingServer)
+	if err != nil {
+		return
+	}
 	return
 }
