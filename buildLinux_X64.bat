@@ -1,6 +1,7 @@
 mkdir uSafeServerExe
 copy .\settingServer.json .\uSafeServerExe
 copy .\server.pfx .\uSafeServerExe
+for /R %%f in (.\uSafeServerExe\*.sh) do DOS2UNIX.EXE "%%f"
 
 
 SET CGO_ENABLED=0
