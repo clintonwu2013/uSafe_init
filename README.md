@@ -2,18 +2,18 @@
 
 Step1
 
-.\buildLinux_X64.bat
+    .\buildLinux_X64.bat
 
 Step2
 
-deploy folder uSafeServerExe to linux os /home directcory
+    deploy folder uSafeServerExe to linux os /home directcory
 
 Step3 
 
-cd /home/uSafeServerExe
+    cd /home/uSafeServerExe
 
-sh restartServer.sh
+    sh restartServer.sh
 
 Step4
 
-visit https://{{ip}}:38443/test1
+    visit https://{{ip}}:38443/test1
